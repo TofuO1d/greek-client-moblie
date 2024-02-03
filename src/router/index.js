@@ -1,27 +1,37 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-
+import store from '@/store'
 Vue.use(VueRouter)
 
+// 路由懒加载方式
+const Tabbar = () => import('@/components/tabbar')
+const Home = () => import('@/views/home')
+const Question = () => import('@/views/question')
+const Video = () => import('@/views/video')
+const User = () => import('@/views/user')
+const Artcile = () => import('@/views/article')
+const Login = () => import('@/views/login')
+
 const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+  // 路由规则
+  { path: '/', components: { default: Home, tabbar: Tabbar } },
+  { path: '/question', components: { default: Question, tabbar: Tabbar } },
+  { path: '/video', components: { default: Video, tabbar: Tabbar } },
+  { path: '/user', components: { default: User, tabbar: Tabbar } },
+  { path: '/article', component: Artcile },
+  { path: '/login', component: Login }
 ]
 
 const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  const token = store.state.user.token
+  if (!token && to.path.startsWith('/user')) {
+    return next('/login?returnUrl=' + encodeURIComponent(to.fullPath))
+  }
+  // 其他情况放行
+  next()
+})
 export default router
