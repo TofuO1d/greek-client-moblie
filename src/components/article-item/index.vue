@@ -1,5 +1,8 @@
 <template>
-  <div class="article-item van-hairline--bottom">
+  <div
+    class="article-item van-hairline--bottom"
+    @click="$router.push('/article?id=' + article.art_id)"
+  >
     <p
       class="title van-multi-ellipsis--l2"
       :class="{ w66: article.cover.type === 1 }"

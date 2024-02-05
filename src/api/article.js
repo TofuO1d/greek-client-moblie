@@ -16,3 +16,10 @@ export const getArticlesByChannel = (channelId, timestamp) => {
     }
   })
 }
+
+export const getArticle = id => {
+  return request({
+    url: `/v1_0/articles/${id}`,
+    method: 'get'
+  })
+}

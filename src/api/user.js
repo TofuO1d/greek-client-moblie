@@ -23,3 +23,23 @@ export const sendMessage = mobile => {
     url: `/v1_0/sms/codes/${mobile}`
   })
 }
+/**
+ * 关注 和 取消关注
+ * @param {*} authorId - 作者ID
+ * @param {*} isFollow - 是否关注
+ * @returns Promise
+ */
+export const followAuthor = (authorId, isFollow) => {
+  if (isFollow) {
+    return request({
+      url: '/v1_0/user/followings',
+      method: 'post',
+      data: { target: authorId }
+    })
+  } else {
+    return request({
+      url: '/v1_0/user/followings/' + authorId,
+      method: 'delete'
+    })
+  }
+}
