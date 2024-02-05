@@ -43,6 +43,10 @@ export default {
       scrollTop: 0
     }
   },
+  // 激活组件
+  activated () {
+    this.$refs.ArticleList.scrollTop = this.scrollTop
+  },
   methods: {
     // 滚动监听
     rememberScroll () {

@@ -2,7 +2,7 @@ export default {
   namespaced: true,
   state () {
     return {
-      token: localStorage.getItem('geek-store-token')
+      token: localStorage.getItem('greek-store-token')
     }
   },
   mutations: {

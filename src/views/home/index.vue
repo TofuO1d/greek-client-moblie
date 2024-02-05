@@ -1,32 +1,63 @@
 <template>
   <div class="home-page">
-    <van-tabs animated>
-      <van-tab v-for="item in allChannels" :key="item.id" :title="item.name">
+    <van-tabs animated v-model="activeIndex">
+      <van-tab v-for="item in myChannels" :key="item.id" :title="item.name">
         <article-list :channelId="item.id"></article-list>
       </van-tab>
-      <!-- 按钮 -->
-      <div class="btn-wrapper">
-        <geek-icon name="search"></geek-icon>
-        <geek-icon name="channel"></geek-icon>
-      </div>
     </van-tabs>
+    <!-- 按钮 -->
+    <div class="btn-wrapper">
+      <geek-icon name="search"></geek-icon>
+      <geek-icon name="channel" @click.native="showChannel = true"></geek-icon>
+    </div>
+    <!-- 频道 -->
+    <article-channel
+      v-model="showChannel"
+      :myChannels="myChannels"
+      :activeIndex.sync="activeIndex"
+      @addChannelItem="handlerAdd"
+      @delChannelItem="handlerDel"
+    ></article-channel>
   </div>
 </template>
 <script>
-import { getAllChannels } from '@/api/channel'
+import { getMyChannels } from '@/api/channel'
+// import store from 'vuex'
 import GeekIcon from '@/components/geek-icon'
 import ArticleList from '@/components/article-list'
+import ArticleChannel from '@/components/article-channel'
 export default {
   name: 'HomePage',
   data () {
     return {
-      allChannels: []
+      myChannels: [],
+      // 控制频道组件显示隐藏
+      showChannel: false,
+      activeIndex: 0
     }
   },
-  components: { GeekIcon, ArticleList },
+  components: { GeekIcon, ArticleList, ArticleChannel },
   async created () {
-    const [, res] = await getAllChannels()
-    this.allChannels = res.data.data.channels
+    // const [, res] = await getAllChannels()
+    // this.myChannels = res.data.data.channels
+    // 不使用err不写err即可，但是,号需要写
+    const channels = await getMyChannels(this.$store.state.user.token)
+    this.myChannels = channels
+  },
+  watch: {
+    '$store.state.user.token': async function () {
+      const channels = await getMyChannels()
+      this.myChannels = channels
+      this.activeIndex = 0
+    }
+  },
+  methods: {
+    handlerAdd (item) {
+      this.myChannels.push(item)
+    },
+    handlerDel (index) {
+      this.myChannels.splice(index, 1)
+    }
   }
 }
 </script>
