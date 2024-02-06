@@ -1,4 +1,5 @@
-import request from '@/utils/request'
+import request, { baseURL } from '@/utils/request'
+import axios from 'axios'
 
 /**
  * 登录
@@ -75,5 +76,19 @@ export const updateUserProfile = user => {
     url: '/v1_0/user/profile',
     method: 'patch',
     data: user
+  })
+}
+/**
+ * 刷新token
+ * @param {String} refreshToken - 保存的refresh_token
+ * @returns
+ */
+export const refreshTokenAPI = refreshToken => {
+  return axios({
+    url: baseURL + 'v1_0/authorizations',
+    method: 'put',
+    headers: {
+      Authorization: `Bearer ${refreshToken}`
+    }
   })
 }
