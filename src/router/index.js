@@ -12,6 +12,7 @@ const User = () => import('@/views/user')
 const Artcile = () => import('@/views/article')
 const Login = () => import('@/views/login')
 const UserProfile = () => import('@/views/user/profile')
+const Chat = () => import('@/views/user/chat')
 const routes = [
   // 路由规则
   { path: '/', components: { default: Home, tabbar: Tabbar } },
@@ -20,7 +21,8 @@ const routes = [
   { path: '/user', components: { default: User, tabbar: Tabbar } },
   { path: '/article', component: Artcile },
   { path: '/login', component: Login },
-  { path: '/user/profile', component: UserProfile }
+  { path: '/user/profile', component: UserProfile },
+  { path: '/user/chat', component: Chat }
 ]
 
 const router = new VueRouter({
