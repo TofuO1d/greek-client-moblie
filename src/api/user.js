@@ -43,3 +43,9 @@ export const followAuthor = (authorId, isFollow) => {
     })
   }
 }
+/**
+ * 获取当前用户的信息（资料和统计）
+ */
+export const getUserInfo = () => {
+  return request({ url: '/v1_0/user' })
+}

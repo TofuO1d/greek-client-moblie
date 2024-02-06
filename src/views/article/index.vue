@@ -62,37 +62,69 @@
         </div>
       </div>
       <!-- 内容：文章内容 -->
-      <div class="main">
+      <div class="main" ref="main">
         <div class="html" v-html="article.content" v-highlight></div>
         <div class="space"></div>
       </div>
       <!-- 评论：评论组件 -->
+      <article-comment
+        v-if="!isEmpty"
+        :article="article"
+        @click-comment="srollToComment"
+        @changeAtt="handlerAtt"
+        @toggleCollected="handlerCollected"
+        @addComment="handlerCommentCount"
+      />
     </div>
   </div>
 </template>
 <script>
 import { getArticle } from '@/api/article'
 import { followAuthor } from '@/api/user'
+import ArticleComment from '@/components/article-comment'
 export default {
   name: 'ArticlePage',
   data () {
     return {
       article: {},
       showNavAuthor: false,
-      loading: false
+      loading: false,
+      toComment: false
     }
   },
+  components: { ArticleComment },
   created () {
     this.getArticle()
   },
+  computed: {
+    isEmpty () {
+      if (this.article.art_id) {
+        console.log('1')
+        console.log(this.article)
+        return false
+      } else {
+        console.log('2')
+        console.log(this.article)
+        return true
+      }
+    }
+  },
   methods: {
+    handlerCommentCount () {
+      this.article.comm_count++
+    },
+    handlerCollected () {
+      this.article.is_collected = !this.article.is_collected
+    },
+    handlerAtt (val) {
+      this.article.attitude = val
+    },
     async getArticle () {
-      console.log(this.$route.query.id)
+      // console.log(this.$route.query.id)
       this.loading = true
       const [, res] = await getArticle(this.$route.query.id)
       this.article = res.data.data
       this.loading = false
-      console.log(this.article)
     },
     // 监听滚动
     onScroll () {
@@ -109,6 +141,19 @@ export default {
       }
       this.$toast.success(newStatus ? '关注成功' : '取消关注')
       this.article.is_followed = newStatus
+    },
+    // 滚动到评论
+    srollToComment () {
+      const headerHeight = this.$refs.header.offsetHeight
+      const mainHeight = this.$refs.main.offsetHeight
+      // 是否滚动到评论，切换状态
+      this.toComment = !this.toComment
+      // 来回切换
+      if (this.toComment) {
+        this.$refs.wrapper.scrollTop = headerHeight + mainHeight
+      } else {
+        this.$refs.wrapper.scrollTop = 0
+      }
     }
   }
 }

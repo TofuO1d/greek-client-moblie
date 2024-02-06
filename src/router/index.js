@@ -11,7 +11,7 @@ const Video = () => import('@/views/video')
 const User = () => import('@/views/user')
 const Artcile = () => import('@/views/article')
 const Login = () => import('@/views/login')
-
+const UserProfile = () => import('@/views/user/profile')
 const routes = [
   // 路由规则
   { path: '/', components: { default: Home, tabbar: Tabbar } },
@@ -19,7 +19,8 @@ const routes = [
   { path: '/video', components: { default: Video, tabbar: Tabbar } },
   { path: '/user', components: { default: User, tabbar: Tabbar } },
   { path: '/article', component: Artcile },
-  { path: '/login', component: Login }
+  { path: '/login', component: Login },
+  { path: '/user/profile', component: UserProfile }
 ]
 
 const router = new VueRouter({
